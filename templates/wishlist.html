@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1 style="text-align:center;margin:30px 0;">
+<h1 class="title">
     ❤️ My Wishlist
 </h1>
 
@@ -14,19 +14,31 @@
 
     <div class="movie-card">
 
-        <img src="{{ item.movie.poster }}" alt="{{ item.movie.title }}">
+        <a href="{% url 'movie_detail' item.movie.id %}">
+
+            <img
+                src="{{ item.movie.poster }}"
+                alt="{{ item.movie.title }}"
+                onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster';"
+            >
+
+        </a>
 
         <div class="movie-info">
 
             <h3>{{ item.movie.title }}</h3>
 
-            <p>⭐ {{ item.movie.imdb_rating }}</p>
+            <p>
+                ⭐ {{ item.movie.imdb_rating }}/10
+            </p>
 
-            <p>🌐 {{ item.movie.language }}</p>
+            <p>
+                🌐 {{ item.movie.language }}
+            </p>
 
-            <p>📅 {{ item.movie.release_date }}</p>
-
-            <br>
+            <p>
+                📅 {{ item.movie.release_date|date:"Y" }}
+            </p>
 
             <a href="{% url 'movie_detail' item.movie.id %}">
                 View Details
@@ -36,7 +48,7 @@
 
             <a
                 href="{% url 'remove_from_wishlist' item.movie.id %}"
-                style="background:#444;"
+                class="remove-btn"
             >
                 ❌ Remove
             </a>
@@ -51,19 +63,15 @@
 
 {% else %}
 
-<div style="text-align:center;margin-top:100px;">
+<div class="empty-wishlist">
 
     <h2>Your wishlist is empty.</h2>
 
-    <br>
+    <p>
+        Start exploring movies and add your favourites.
+    </p>
 
-    <a href="{% url 'home' %}"
-       style="
-       background:#e50914;
-       padding:12px 25px;
-       color:white;
-       text-decoration:none;
-       border-radius:8px;">
+    <a href="{% url 'home' %}" class="wishlist-btn">
         Browse Movies
     </a>
 

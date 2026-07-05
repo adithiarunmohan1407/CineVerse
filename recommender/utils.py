@@ -1,98 +1,67 @@
-import pandas as pd
-
 from sklearn.feature_extraction.text import TfidfVectorizer
-
 from sklearn.metrics.pairwise import cosine_similarity
 
 from movies.models import Movie
 
-def build_similarity_matrix():
 
-    movies = Movie.objects.all()
+def recommend(movie_id, limit=10):
 
-    data = []
+    movies = list(Movie.objects.all())
 
-    for movie in movies:
+    if len(movies) < 2:
+        return []
 
-        data.append({
-
-            "id": movie.id,
-
-            "title": movie.title,
-
-            "overview": movie.description or "",
-
-            "language": movie.language or "",
-
-            "rating": str(movie.imdb_rating),
-
-        })
-
-    df = pd.DataFrame(data)
-
-    df["features"] = (
-
-        df["overview"]
-
-        + " "
-
-        + df["language"]
-
-        + " "
-
-        + df["rating"]
-
-    )
-
-    tfidf = TfidfVectorizer(stop_words="english")
-
-    matrix = tfidf.fit_transform(df["features"])
-
-    similarity = cosine_similarity(matrix)
-
-    return df, similarity
-
-
-
-def recommend(movie_id):
-
-    movies = Movie.objects.all()
-
-    data = []
+    features = []
 
     for movie in movies:
 
-        data.append({
-            "id": movie.id,
-            "title": movie.title,
-            "overview": movie.description or "",
-            "language": movie.language or "",
-            "rating": movie.imdb_rating,
-            "poster": movie.poster,
-        })
+        genres = " ".join(
+            movie.genres.values_list("name", flat=True)
+        )
 
-    df = pd.DataFrame(data)
+        text = (
+            (movie.description or "") + " " +
+            (movie.language or "") + " " +
+            genres + " " +
+            str(movie.imdb_rating)
+        )
 
-    df["features"] = (
-        df["overview"] + " " +
-        df["language"]
-    )
+        features.append(text)
 
     tfidf = TfidfVectorizer(stop_words="english")
 
-    matrix = tfidf.fit_transform(df["features"])
+    matrix = tfidf.fit_transform(features)
 
     similarity = cosine_similarity(matrix)
 
-    index = df[df["id"] == movie_id].index[0]
+    index = None
+
+    for i, movie in enumerate(movies):
+        if movie.id == movie_id:
+            index = i
+            break
+
+    if index is None:
+        return []
 
     scores = list(enumerate(similarity[index]))
 
-    scores = sorted(scores, key=lambda x: x[1], reverse=True)
+    scores = sorted(
+        scores,
+        key=lambda x: x[1],
+        reverse=True
+    )
 
     recommendations = []
 
-    for score in scores[1:11]:
-        recommendations.append(df.iloc[score[0]].to_dict())
+    for movie_index, score in scores[1:]:
+
+        movie = movies[movie_index]
+
+        if movie.id != movie_id:
+            recommendations.append(movie)
+
+        if len(recommendations) >= limit:
+            break
 
     return recommendations

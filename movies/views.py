@@ -7,20 +7,22 @@ from .models import Movie, Wishlist
 from recommender.utils import recommend
 
 
-# ----------------------------
+# ----------------------------------------
 # Landing Page
-# ----------------------------
+# ----------------------------------------
+
 def landing(request):
     return render(request, "landing.html")
 
 
-# ----------------------------
+# ----------------------------------------
 # Home Page
-# ----------------------------
+# ----------------------------------------
+
 @login_required(login_url="login")
 def home(request):
 
-    movies = Movie.objects.all()
+    movies = Movie.objects.all().order_by("-popularity")
 
     search = request.GET.get("search")
     language = request.GET.get("language")
@@ -31,7 +33,7 @@ def home(request):
         movies = movies.filter(title__icontains=search)
 
     if language:
-        movies = movies.filter(language=language)
+        movies = movies.filter(language__iexact=language)
 
     if rating:
         movies = movies.filter(imdb_rating__gte=rating)
@@ -42,6 +44,7 @@ def home(request):
     paginator = Paginator(movies, 20)
 
     page = request.GET.get("page")
+
     page_obj = paginator.get_page(page)
 
     return render(request, "home.html", {
@@ -50,9 +53,10 @@ def home(request):
     })
 
 
-# ----------------------------
-# Movie Detail
-# ----------------------------
+# ----------------------------------------
+# Movie Details
+# ----------------------------------------
+
 @login_required(login_url="login")
 def movie_detail(request, id):
 
@@ -75,9 +79,10 @@ def movie_detail(request, id):
     })
 
 
-# ----------------------------
-# Wishlist Page
-# ----------------------------
+# ----------------------------------------
+# Wishlist
+# ----------------------------------------
+
 @login_required(login_url="login")
 def wishlist(request):
 
@@ -86,13 +91,14 @@ def wishlist(request):
     ).select_related("movie")
 
     return render(request, "wishlist.html", {
-        "wishlist_items": wishlist_items,
+        "wishlist_items": wishlist_items
     })
 
 
-# ----------------------------
-# Add Movie to Wishlist
-# ----------------------------
+# ----------------------------------------
+# Add to Wishlist
+# ----------------------------------------
+
 @login_required(login_url="login")
 def add_to_wishlist(request, id):
 
@@ -104,16 +110,17 @@ def add_to_wishlist(request, id):
     )
 
     if created:
-        messages.success(request, f'"{movie.title}" added to wishlist.')
+        messages.success(request, f'"{movie.title}" added to your wishlist!')
     else:
         messages.info(request, f'"{movie.title}" is already in your wishlist.')
 
     return redirect("movie_detail", id=id)
 
 
-# ----------------------------
-# Remove Movie from Wishlist
-# ----------------------------
+# ----------------------------------------
+# Remove from Wishlist
+# ----------------------------------------
+
 @login_required(login_url="login")
 def remove_from_wishlist(request, id):
 
@@ -124,6 +131,6 @@ def remove_from_wishlist(request, id):
         movie=movie
     ).delete()
 
-    messages.success(request, f'"{movie.title}" removed from wishlist.')
+    messages.success(request, f'"{movie.title}" removed from your wishlist.')
 
     return redirect("wishlist")

@@ -12,9 +12,12 @@ class Genre(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=255)
     tmdb_id = models.IntegerField(unique=True)
+
     language = models.CharField(max_length=50)
     description = models.TextField()
+
     imdb_rating = models.FloatField(default=0)
+
     release_date = models.DateField(null=True, blank=True)
 
     poster = models.URLField()
@@ -25,7 +28,10 @@ class Movie(models.Model):
 
     adult = models.BooleanField(default=False)
 
-    genres = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(
+        Genre,
+        blank=True
+    )
 
     liked_by = models.ManyToManyField(
         User,
@@ -38,12 +44,21 @@ class Movie(models.Model):
 
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    movie = models.ForeignKey(
+        Movie,
+        on_delete=models.CASCADE
+    )
+
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("user", "movie")
+        ordering = ["-added_at"]
 
     def __str__(self):
         return f"{self.user.username} - {self.movie.title}"

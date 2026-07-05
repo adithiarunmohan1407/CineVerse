@@ -1,108 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineVerse AI</title>
+{% extends "base.html" %}
 
-    <style>
+{% block content %}
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, Helvetica, sans-serif;
-        }
+<div class="hero-overlay">
 
-        body{
+    <div class="hero-content">
 
-            background:url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=80");
-            background-size:cover;
-            background-position:center;
-            height:100vh;
-            color:white;
+        <h1>CineVerse AI</h1>
 
-        }
+        <h2>Discover Movies Like Never Before</h2>
 
-        .overlay{
+        <p>
+            Explore thousands of English, Hindi, Malayalam, Tamil and Telugu
+            movies. Get AI-powered recommendations based on your favourite
+            films, build your wishlist, and discover your next binge-worthy
+            movie.
+        </p>
 
-            background:rgba(0,0,0,.75);
-            width:100%;
-            height:100vh;
+        <div class="hero-buttons">
 
-            display:flex;
-            justify-content:center;
-            align-items:center;
+            <a href="{% url 'login' %}" class="hero-btn">
+                Login
+            </a>
 
-        }
+            <a href="{% url 'register' %}" class="hero-btn secondary">
+                Register
+            </a>
 
-        .content{
+        </div>
 
-            text-align:center;
-            width:80%;
-
-        }
-
-        h1{
-
-            font-size:70px;
-            color:#ff4040;
-            margin-bottom:20px;
-
-        }
-
-        p{
-
-            font-size:22px;
-            line-height:1.8;
-            margin-bottom:40px;
-
-        }
-
-        .btn{
-
-            text-decoration:none;
-            color:white;
-            background:#e50914;
-            padding:15px 40px;
-            margin:10px;
-            border-radius:8px;
-            font-size:20px;
-
-        }
-
-        .btn:hover{
-
-            background:#b20710;
-
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-<div class="overlay">
-
-<div class="content">
-
-<h1>🎬 CineVerse AI</h1>
-
-<p>
-
-Discover thousands of English, Hindi, Malayalam, Tamil and Telugu movies with AI-powered recommendations.
-
-</p>
-
-<a href="{% url 'login' %}" class="btn">Login</a>
-
-<a href="{% url 'register' %}" class="btn">Register</a>
+    </div>
 
 </div>
 
+<div class="features">
+
+    <div class="feature-card">
+
+        <h3>🎬 5000+ Movies</h3>
+
+        <p>Browse movies from five different languages.</p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <h3>🤖 AI Recommendations</h3>
+
+        <p>Find movies similar to the ones you already love.</p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <h3>❤️ Wishlist</h3>
+
+        <p>Save your favourite movies to watch later.</p>
+
+    </div>
+
 </div>
 
-</body>
-
-</html>
+{% endblock %}

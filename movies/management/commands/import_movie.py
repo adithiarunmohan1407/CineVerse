@@ -1,12 +1,11 @@
 from django.core.management.base import BaseCommand
-from movies.models import Movie
-from movies.services import fetch_movies
-
+from movies.models import Movie, Genre
+from movies.services import fetch_movies, fetch_movie_details
 
 class Command(BaseCommand):
-    help = "Import multilingual movies from TMDb"
+    help = "Import movies from TMDb"
 
-    languages = {
+    LANGUAGES = {
         "en": "English",
         "hi": "Hindi",
         "ml": "Malayalam",
@@ -14,41 +13,93 @@ class Command(BaseCommand):
         "te": "Telugu",
     }
 
+    TOTAL_PAGES = 100
+
     def handle(self, *args, **kwargs):
+
         total = 0
 
-        for code, name in self.languages.items():
-            self.stdout.write(f"\nImporting {name} movies...")
+        for code, language in self.LANGUAGES.items():
 
-            for page in range(1, 26):
-                movies = fetch_movies(code, page)
+            self.stdout.write(f"\nImporting {language} movies...")
 
-                for movie in movies:
-                    if not movie.get("poster_path"):
+            for page in range(1, self.TOTAL_PAGES + 1):
+
+                try:
+                    movies = fetch_movies(code, page)
+
+                except Exception as e:
+                    self.stdout.write(
+                        self.style.WARNING(
+                            f"Skipping page {page}: {e}"
+                        )
+                    )
+                    continue
+
+                if not movies:
+                    continue
+
+                for data in movies:
+
+                    if not data.get("poster_path"):
                         continue
 
-                    Movie.objects.update_or_create(
-                        tmdb_id=movie["id"],
+                    movie, created = Movie.objects.update_or_create(
+
+                        tmdb_id=data["id"],
+
                         defaults={
-                            "title": movie["title"],
-                            "language": name,
-                            "description": movie["overview"],
-                            "imdb_rating": movie["vote_average"],
-                            "release_date": movie.get("release_date") or None,
-                            "poster": f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
-                            if movie.get("poster_path")
-                            else "",
-                            "backdrop": f"https://image.tmdb.org/t/p/original{movie['backdrop_path']}"
-                            if movie.get("backdrop_path")
-                            else "",
-                            "popularity": movie.get("popularity", 0),
-                            "vote_count": movie.get("vote_count", 0),
-                            "adult": movie.get("adult", False),
+
+                            "title": data.get("title", ""),
+
+                            "language": language,
+
+                            "description": data.get("overview", ""),
+
+                            "imdb_rating": data.get("vote_average", 0),
+
+                            "release_date": data.get("release_date") or None,
+
+                            "poster": (
+                                f"https://image.tmdb.org/t/p/w500{data['poster_path']}"
+                            ),
+
+                            "backdrop": (
+                                f"https://image.tmdb.org/t/p/original{data['backdrop_path']}"
+                                if data.get("backdrop_path")
+                                else ""
+                            ),
+
+                            "popularity": data.get("popularity", 0),
+
+                            "vote_count": data.get("vote_count", 0),
+
+                            "adult": data.get("adult", False),
+
                         },
+
                     )
+
+                    details = fetch_movie_details(data["id"])
+
+                    for g in details.get("genres", []):
+
+                        genre, _ = Genre.objects.get_or_create(
+                            name=g["name"]
+                        )
+
+                        movie.genres.add(genre)
+
                     total += 1
 
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"{language} completed."
+                )
+            )
+
         self.stdout.write(
-            self.style.SUCCESS(f"\nSuccessfully imported {total} movies!")
+            self.style.SUCCESS(
+                f"\nImported/Updated {total} movies."
+            )
         )
-        

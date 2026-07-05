@@ -3,11 +3,21 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CineVerse AI</title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -15,35 +25,87 @@
 <nav class="navbar">
 
     <div class="logo">
-        <a href="{% url 'home' %}">🎬 CineVerse AI</a>
-    </div>
-
-    <div class="nav-links">
-
-        <a href="{% url 'home' %}">Home</a>
 
         {% if user.is_authenticated %}
 
-            <a href="{% url 'wishlist' %}">Wishlist</a>
-            <a href="{% url 'logout' %}">Logout</a>
+            <a href="{% url 'home' %}">
+                🎬 CineVerse AI
+            </a>
 
         {% else %}
 
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Register</a>
+            <a href="{% url 'landing' %}">
+                🎬 CineVerse AI
+            </a>
 
         {% endif %}
 
     </div>
 
+    <ul class="nav-links">
+
+        {% if user.is_authenticated %}
+
+            <li>
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'wishlist' %}">
+                    Wishlist
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'logout' %}">
+                    Logout
+                </a>
+            </li>
+
+        {% else %}
+
+            <li>
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'register' %}">
+                    Register
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+
 </nav>
 
-<div class="container">
+{% if messages %}
 
-{% block content %}
-{% endblock %}
+<div class="messages">
+
+    {% for message in messages %}
+
+        <div class="alert">
+
+            {{ message }}
+
+        </div>
+
+    {% endfor %}
 
 </div>
 
+{% endif %}
+
+{% block content %}
+
+{% endblock %}
+
 </body>
+
 </html>
