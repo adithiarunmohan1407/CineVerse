@@ -2,35 +2,72 @@
 
 {% block content %}
 
-<h1>❤️ My Wishlist</h1>
+<h1 style="text-align:center;margin:30px 0;">
+    ❤️ My Wishlist
+</h1>
 
-{% if movies %}
+{% if wishlist_items %}
 
 <div class="movie-container">
 
-{% for movie in movies %}
+    {% for item in wishlist_items %}
 
-<div class="movie-card">
+    <div class="movie-card">
 
-<img src="{{ movie.poster }}" width="200">
+        <img src="{{ item.movie.poster }}" alt="{{ item.movie.title }}">
 
-<h3>{{ movie.title }}</h3>
+        <div class="movie-info">
 
-<p>⭐ {{ movie.imdb_rating }}</p>
+            <h3>{{ item.movie.title }}</h3>
 
-<a href="{% url 'remove_from_wishlist' movie.id %}">
-    Remove
-</a>
+            <p>⭐ {{ item.movie.imdb_rating }}</p>
 
-</div>
+            <p>🌐 {{ item.movie.language }}</p>
 
-{% endfor %}
+            <p>📅 {{ item.movie.release_date }}</p>
+
+            <br>
+
+            <a href="{% url 'movie_detail' item.movie.id %}">
+                View Details
+            </a>
+
+            <br><br>
+
+            <a
+                href="{% url 'remove_from_wishlist' item.movie.id %}"
+                style="background:#444;"
+            >
+                ❌ Remove
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
 
 </div>
 
 {% else %}
 
-<h2>Your wishlist is empty.</h2>
+<div style="text-align:center;margin-top:100px;">
+
+    <h2>Your wishlist is empty.</h2>
+
+    <br>
+
+    <a href="{% url 'home' %}"
+       style="
+       background:#e50914;
+       padding:12px 25px;
+       color:white;
+       text-decoration:none;
+       border-radius:8px;">
+        Browse Movies
+    </a>
+
+</div>
 
 {% endif %}
 

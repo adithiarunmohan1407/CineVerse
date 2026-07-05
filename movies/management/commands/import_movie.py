@@ -20,7 +20,7 @@ class Command(BaseCommand):
         for code, name in self.languages.items():
             self.stdout.write(f"\nImporting {name} movies...")
 
-            for page in range(1, 6):
+            for page in range(1, 26):
                 movies = fetch_movies(code, page)
 
                 for movie in movies:

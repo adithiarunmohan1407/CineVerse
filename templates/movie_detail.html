@@ -36,12 +36,31 @@
 
             {% if user.is_authenticated %}
 
-            <a href="{% url 'add_to_wishlist' movie.id %}" class="wishlist-btn">
-                ❤️ Add to Wishlist
-            </a>
+            {% if in_wishlist %}
 
-            {% endif %}
+<a href="{% url 'wishlist' %}"
+   style="
+   background:green;
+   color:white;
+   padding:12px 20px;
+   text-decoration:none;
+   border-radius:8px;">
+    ❤️ Already in Wishlist
+</a>
 
+{% else %}
+
+<a href="{% url 'add_to_wishlist' movie.id %}"
+   style="
+   background:#e50914;
+   color:white;
+   padding:12px 20px;
+   text-decoration:none;
+   border-radius:8px;">
+    ❤️ Add to Wishlist
+</a>
+
+{% endif %}
         </div>
 
     </div>

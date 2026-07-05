@@ -1,16 +1,13 @@
 {% load static %}
-
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineVerse AI</title>
-    
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
 
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
@@ -18,27 +15,21 @@
 <nav class="navbar">
 
     <div class="logo">
-
         <a href="{% url 'home' %}">🎬 CineVerse AI</a>
-
     </div>
 
-    <div>
-        
-        <a href="{% url 'home' %}">   Home   </a>
+    <div class="nav-links">
+
+        <a href="{% url 'home' %}">Home</a>
 
         {% if user.is_authenticated %}
 
-            <a href="{% url 'wishlist' %}">   Wishlist  </a>
-
-            
-
+            <a href="{% url 'wishlist' %}">Wishlist</a>
             <a href="{% url 'logout' %}">Logout</a>
 
         {% else %}
 
             <a href="{% url 'login' %}">Login</a>
-
             <a href="{% url 'register' %}">Register</a>
 
         {% endif %}
@@ -47,12 +38,12 @@
 
 </nav>
 
-{% block content %}
+<div class="container">
 
+{% block content %}
 {% endblock %}
 
-<script src="{% static 'js/script.js' %}"></script>
+</div>
 
 </body>
-
 </html>

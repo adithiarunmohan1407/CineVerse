@@ -3,14 +3,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 
-from .models import Movie
+from .models import Movie, Wishlist
 from recommender.utils import recommend
 
 
+# ----------------------------
+# Landing Page
+# ----------------------------
 def landing(request):
     return render(request, "landing.html")
 
 
+# ----------------------------
+# Home Page
+# ----------------------------
 @login_required(login_url="login")
 def home(request):
 
@@ -36,7 +42,6 @@ def home(request):
     paginator = Paginator(movies, 20)
 
     page = request.GET.get("page")
-
     page_obj = paginator.get_page(page)
 
     return render(request, "home.html", {
@@ -45,6 +50,9 @@ def home(request):
     })
 
 
+# ----------------------------
+# Movie Detail
+# ----------------------------
 @login_required(login_url="login")
 def movie_detail(request, id):
 
@@ -52,25 +60,70 @@ def movie_detail(request, id):
 
     try:
         recommendations = recommend(movie.id)
-    except:
+    except Exception:
         recommendations = []
+
+    in_wishlist = Wishlist.objects.filter(
+        user=request.user,
+        movie=movie
+    ).exists()
 
     return render(request, "movie_detail.html", {
         "movie": movie,
         "recommendations": recommendations,
+        "in_wishlist": in_wishlist,
     })
 
 
+# ----------------------------
+# Wishlist Page
+# ----------------------------
 @login_required(login_url="login")
 def wishlist(request):
-    return render(request, "wishlist.html")
+
+    wishlist_items = Wishlist.objects.filter(
+        user=request.user
+    ).select_related("movie")
+
+    return render(request, "wishlist.html", {
+        "wishlist_items": wishlist_items,
+    })
 
 
+# ----------------------------
+# Add Movie to Wishlist
+# ----------------------------
 @login_required(login_url="login")
 def add_to_wishlist(request, id):
 
     movie = get_object_or_404(Movie, id=id)
 
-    messages.success(request, f"{movie.title} added to wishlist!")
+    wishlist_item, created = Wishlist.objects.get_or_create(
+        user=request.user,
+        movie=movie
+    )
+
+    if created:
+        messages.success(request, f'"{movie.title}" added to wishlist.')
+    else:
+        messages.info(request, f'"{movie.title}" is already in your wishlist.')
 
     return redirect("movie_detail", id=id)
+
+
+# ----------------------------
+# Remove Movie from Wishlist
+# ----------------------------
+@login_required(login_url="login")
+def remove_from_wishlist(request, id):
+
+    movie = get_object_or_404(Movie, id=id)
+
+    Wishlist.objects.filter(
+        user=request.user,
+        movie=movie
+    ).delete()
+
+    messages.success(request, f'"{movie.title}" removed from wishlist.')
+
+    return redirect("wishlist")

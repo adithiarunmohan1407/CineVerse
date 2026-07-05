@@ -108,3 +108,69 @@ form button{
     color:white;
     cursor:pointer;
 }
+/* ===========================
+   Login & Register Pages
+=========================== */
+
+.container{
+    width:90%;
+    margin:auto;
+}
+
+.auth-container{
+    width:400px;
+    margin:70px auto;
+    background:#222;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,.4);
+    text-align:center;
+}
+
+.auth-container h1{
+    margin-bottom:30px;
+    color:#e50914;
+}
+
+.auth-container form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.auth-container input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.auth-container button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#e50914;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.auth-container button:hover{
+    background:#b20710;
+}
+
+.auth-container p{
+    margin-top:20px;
+}
+
+.auth-container a{
+    color:#e50914;
+    text-decoration:none;
+}
+
+.auth-container a:hover{
+    text-decoration:underline;
+}

@@ -10,7 +10,7 @@
     </p>
 
     <!-- Search Bar -->
-    <form method="GET">
+    <form action="{% url 'home' %}" method="GET">
 
     <input
         type="text"
@@ -59,19 +59,19 @@
     <!-- Language Filter -->
     <div class="language-filter">
 
-        <a href="/">All</a>
+    <a href="{% url 'home' %}">All</a>
 
-        <a href="/?language=English">English</a>
+    <a href="{% url 'home' %}?language=English">English</a>
 
-        <a href="/?language=Hindi">Hindi</a>
+    <a href="{% url 'home' %}?language=Hindi">Hindi</a>
 
-        <a href="/?language=Malayalam">Malayalam</a>
+    <a href="{% url 'home' %}?language=Malayalam">Malayalam</a>
 
-        <a href="/?language=Tamil">Tamil</a>
+    <a href="{% url 'home' %}?language=Tamil">Tamil</a>
 
-        <a href="/?language=Telugu">Telugu</a>
+    <a href="{% url 'home' %}?language=Telugu">Telugu</a>
 
-    </div>
+</div>
 
     <hr>
 
