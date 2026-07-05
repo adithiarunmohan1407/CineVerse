@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="movie-detail-container">
+
+    <div class="movie-header">
+
+        <div class="movie-poster">
+
+            <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+
+        </div>
+
+        <div class="movie-info">
+
+            <h1>{{ movie.title }}</h1>
+
+            <div class="movie-meta">
+
+                <span>⭐ {{ movie.imdb_rating }}/10</span>
+
+                <span>🌐 {{ movie.language }}</span>
+
+                <span>📅 {{ movie.release_date }}</span>
+
+            </div>
+
+            <h2>Story Summary</h2>
+
+            <p class="summary">
+
+                {{ movie.description }}
+
+            </p>
+
+            {% if user.is_authenticated %}
+
+            <a href="{% url 'add_to_wishlist' movie.id %}" class="wishlist-btn">
+                ❤️ Add to Wishlist
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <h2 class="section-title">🎯 AI Recommended Movies</h2>
+
+    <div class="recommendation-grid">
+
+        {% for rec in recommendations %}
+
+        <div class="recommend-card">
+
+            <a href="{% url 'movie_detail' rec.id %}">
+
+                <img src="{{ rec.poster }}" alt="{{ rec.title }}">
+
+            </a>
+
+            <div class="recommend-info">
+
+                <h3>{{ rec.title }}</h3>
+
+                <p>⭐ {{ rec.rating }}</p>
+
+                <p>{{ rec.language }}</p>
+
+                <a href="{% url 'movie_detail' rec.id %}" class="details-btn">
+                    View Details
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <h3>No recommendations available.</h3>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<style>
+
+body{
+    background:#141414;
+    color:white;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.movie-detail-container{
+
+    width:90%;
+    margin:40px auto;
+
+}
+
+.movie-header{
+
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+
+}
+
+.movie-poster img{
+
+    width:320px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,.6);
+
+}
+
+.movie-info{
+
+    flex:1;
+
+}
+
+.movie-info h1{
+
+    font-size:45px;
+    margin-bottom:20px;
+
+}
+
+.movie-meta{
+
+    display:flex;
+    gap:20px;
+    margin-bottom:25px;
+    font-size:18px;
+
+}
+
+.summary{
+
+    font-size:18px;
+    line-height:1.8;
+    color:#dddddd;
+    margin-top:15px;
+    margin-bottom:30px;
+
+}
+
+.wishlist-btn{
+
+    background:#e50914;
+    color:white;
+    text-decoration:none;
+    padding:12px 25px;
+    border-radius:8px;
+    font-weight:bold;
+    transition:.3s;
+
+}
+
+.wishlist-btn:hover{
+
+    background:#b20710;
+
+}
+
+.section-title{
+
+    margin-top:50px;
+    margin-bottom:25px;
+
+}
+
+.recommendation-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:25px;
+
+}
+
+.recommend-card{
+
+    background:#222;
+    border-radius:12px;
+    overflow:hidden;
+    transition:.3s;
+
+}
+
+.recommend-card:hover{
+
+    transform:scale(1.05);
+
+}
+
+.recommend-card img{
+
+    width:100%;
+    height:320px;
+    object-fit:cover;
+
+}
+
+.recommend-info{
+
+    padding:15px;
+    text-align:center;
+
+}
+
+.recommend-info h3{
+
+    font-size:20px;
+    margin-bottom:10px;
+
+}
+
+.recommend-info p{
+
+    color:#cccccc;
+    margin:5px 0;
+
+}
+
+.details-btn{
+
+    display:inline-block;
+    margin-top:12px;
+    background:#e50914;
+    color:white;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:6px;
+
+}
+
+.details-btn:hover{
+
+    background:#b20710;
+
+}
+
+hr{
+
+    border:1px solid #333;
+    margin:50px 0;
+
+}
+
+@media(max-width:768px){
+
+.movie-header{
+
+    flex-direction:column;
+    align-items:center;
+
+}
+
+.movie-info{
+
+    text-align:center;
+
+}
+
+.movie-meta{
+
+    justify-content:center;
+    flex-wrap:wrap;
+
+}
+
+.movie-poster img{
+
+    width:260px;
+
+}
+
+}
+
+</style>
+
+{% endblock %}

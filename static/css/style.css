@@ -1,0 +1,110 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#141414;
+    color:white;
+    font-family:Arial,sans-serif;
+}
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 40px;
+    background:black;
+}
+
+.navbar a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+}
+
+.logo a{
+    font-size:28px;
+    color:red;
+    font-weight:bold;
+}
+
+.movie-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+    padding:30px;
+}
+
+.movie-card{
+    background:#222;
+    border-radius:12px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.movie-card:hover{
+    transform:scale(1.05);
+}
+
+.movie-card img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+}
+
+.movie-info{
+    padding:15px;
+}
+
+.movie-info a{
+    display:inline-block;
+    margin-top:10px;
+    background:red;
+    color:white;
+    padding:8px 14px;
+    border-radius:5px;
+    text-decoration:none;
+}
+.pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    margin:40px 0;
+}
+
+.pagination a{
+    background:red;
+    color:white;
+    padding:10px 20px;
+    text-decoration:none;
+    border-radius:5px;
+}
+
+.pagination span{
+    font-size:18px;
+}
+
+form{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    margin:20px;
+}
+
+form input,
+form select,
+form button{
+    padding:10px;
+    border-radius:5px;
+    border:none;
+}
+
+form button{
+    background:red;
+    color:white;
+    cursor:pointer;
+}
